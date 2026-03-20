@@ -34,10 +34,10 @@ pointGetWhichMonitor(x:="", y:="", dwFlags:="")    {
         ,MONITOR_DEFAULTTOPRIMARY:=0x00000001
         ,MONITOR_DEFAULTTONEAREST:=0x00000002
     if (x=="" || y=="")    {
-        varSetCapacity(POINT, 8, 0)
-        if (!dllCall("User32.dll\GetCursorPos", "Ptr",&POINT))
+        varSetCapacity(point, 8, 0)
+        if (!dllCall("User32.dll\GetCursorPos", "Ptr",&point))
             return 0
-        x:=numGet(POINT,0,"Int"), y:=numGet(POINT,4,"Int")
+        x:=numGet(point,0,"Int"), y:=numGet(point,4,"Int")
     }
     if (dwFlags!=="")    {
         dwFlags:=(dwFlags==MONITOR_DEFAULTTONULL || dwFlags==MONITOR_DEFAULTTOPRIMARY || dwFlags==MONITOR_DEFAULTTONEAREST)?dwFlags
