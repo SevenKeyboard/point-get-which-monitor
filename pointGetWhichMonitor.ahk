@@ -1,6 +1,6 @@
-﻿#Requires AutoHotkey v1.1.36+
-#Include %A_ScriptDir%
-#Include .\lib\MonitorExGetUtils.ahk
+﻿#Requires AutoHotkey v2.0.0+
+#Include "%A_ScriptDir%"
+#Include ".\lib\MonitorExGetUtils.ahk"
 ;==============================================================
 ; pointGetWhichMonitor — Determine monitor index from a point
 ;
@@ -10,15 +10,15 @@
 ;==============================================================
 class VersionManager_pointGetWhichMonitor
 {
-    static _ := VersionManager_pointGetWhichMonitor._init()
-    _init()    {
+    static _ := this._init()
+    static _init()    {
         global
         POINTGETWHICHMONITOR_VERSION := "1.0.0"
-        if (!this._verCheck(MONITOREXGETUTILS_VERSION, "1.0.0"))
-            throw exception("MonitorExGetUtils version 1.x is required (minimum 1.0.0).")
+        if (!this._verCheck(&MONITOREXGETUTILS_VERSION, "1.0.0"))
+            throw error("MonitorExGetUtils version 1.x is required (minimum 1.0.0).")
         return true
     }
-    _verCheck(byRef actual, required)    {
+    static _verCheck(&actual, required)    {
         if !isSet(actual)
             return false
         actualMajor     := strSplit(actual, ".",, 2)[1]
@@ -28,18 +28,17 @@ class VersionManager_pointGetWhichMonitor
         return verCompare(actual, ">=" required)
     }
 }
-pointGetWhichMonitor(x:="", y:="", dwFlags:="")    {
-    local
+pointGetWhichMonitor(x?, y?, dwFlags?)    {
     static MONITOR_DEFAULTTONULL:=0x00000000
         ,MONITOR_DEFAULTTOPRIMARY:=0x00000001
         ,MONITOR_DEFAULTTONEAREST:=0x00000002
-    if (x=="" || y=="")    {
-        varSetCapacity(POINT, 8, 0)
-        if (!dllCall("User32.dll\GetCursorPos", "Ptr",&POINT))
+    if (!isSet(x) || !isSet(y))    {
+        point := buffer(8, 0)
+        if (!dllCall("User32.dll\GetCursorPos", "Ptr",point.Ptr))
             return 0
-        x:=numGet(POINT,0,"Int"), y:=numGet(POINT,4,"Int")
+        x:=numGet(point,0,"Int"), y:=numGet(point,4,"Int")
     }
-    if (dwFlags!=="")    {
+    if (isSet(dwFlags))    {
         dwFlags:=(dwFlags==MONITOR_DEFAULTTONULL || dwFlags==MONITOR_DEFAULTTOPRIMARY || dwFlags==MONITOR_DEFAULTTONEAREST)?dwFlags
                 :(dwFlags~="iD)^MONITOR_DEFAULTTO(NULL|PRIMARY|NEAREST)$")?%dwFlags%
                 :(dwFlags~="iD)^(NULL|PRIMARY|NEAREST)$")?MONITOR_DEFAULTTO%dwFlags%
