@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Version>1.0.0</Version>
+    <RootNamespace>SevenKeyboard</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IsAotCompatible>true</IsAotCompatible>
+    <MonitorExGetUtilsProjectPath Condition="'$(MonitorExGetUtilsProjectPath)' == ''">$(MSBuildThisFileDirectory)../../../../monitor-ex-get-utils/main-cs/src/SevenKeyboard.MonitorExGetUtils/SevenKeyboard.MonitorExGetUtils.csproj</MonitorExGetUtilsProjectPath>
+    <LibraryBuildTargetsPath Condition="'$(LibraryBuildTargetsPath)' == ''">$(MSBuildThisFileDirectory)../../../../library-build/main-cs/CheckLibraryVersions.targets</LibraryBuildTargetsPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(MonitorExGetUtilsProjectPath)" MinimumVersion="2.0.0" />
+    <InternalsVisibleTo Include="PointGetWhichMonitor.Tests" />
+  </ItemGroup>
+  <Import Project="$(LibraryBuildTargetsPath)" />
+</Project>
